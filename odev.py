@@ -1,85 +1,121 @@
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
+#include <stdio.h>
+#include <stdlib.h>
 
-class LinkedList:
-    def __init__(self):
-        self.head = None
+// ---- Bağlı Liste ----
 
-    def add_end(self, data):
-        new = Node(data)
-        if self.head == None:
-            self.head = new
-            return
-        temp = self.head
-        while temp.next != None:
-            temp = temp.next
-        temp.next = new
+struct Node {
+    int data;
+    struct Node* next;
+};
 
-    def add_middle(self, position, data):
-        new = Node(data)
-        temp = self.head
-        index = 0
-        while temp != None and index < position - 1:
-            temp = temp.next
-            index += 1
-        if temp == None:
-            return
-        new.next = temp.next
-        temp.next = new
+struct Node* head = NULL;
 
-    def show(self):
-        temp = self.head
-        while temp != None:
-            print(temp.data, end=" -> ")
-            temp = temp.next
-        print("None")
+void addEnd(int x) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = x;
+    newNode->next = NULL;
 
-# Kullanım
-ll = LinkedList()
-ll.add_end(10)
-ll.add_end(20)
-ll.add_end(40)
-ll.add_middle(1, 30)  # 1. pozisyona 30 ekle
-ll.show()
+    if (head == NULL) {
+        head = newNode;
+        return;
+    }
 
+    struct Node* temp = head;
+    while (temp->next != NULL)
+        temp = temp->next;
 
-stack = []
+    temp->next = newNode;
+}
 
-def push(x):
-    stack.append(x)
+void addMiddle(int pos, int x) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = x;
 
-def pop():
-    if len(stack) > 0:
-        return stack.pop()
-    else:
-        return None
+    struct Node* temp = head;
+    int i = 0;
+    while (temp != NULL && i < pos - 1) {
+        temp = temp->next;
+        i++;
+    }
 
-def peek():
-    if len(stack) > 0:
-        return stack[-1]
-    else:
-        return None
+    if (temp == NULL) return;
 
-def show():
-        print(stack)
+    newNode->next = temp->next;
+    temp->next = newNode;
+}
 
-# En az 15 işlem
-push(10)
-push(20)
-push(30)
-push(40)
-push(50)
-push(60)
-push(70)
-push(80)
-push(90)
-push(100)
-pop()
-pop()
-push(110)
-push(120)
-peek()
-push(130)
-show()
+void showList() {
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+// ---- Stack ----
+
+int stack[100];
+int top = -1;
+
+void push(int x) {
+    if (top < 99) {
+        stack[++top] = x;
+    }
+}
+
+int pop() {
+    if (top >= 0) {
+        return stack[top--];
+    }
+    return -1;
+}
+
+int peek() {
+    if (top >= 0) {
+        return stack[top];
+    }
+    return -1;
+}
+
+void showStack() {
+    for (int i = 0; i <= top; i++) {
+        printf("%d ", stack[i]);
+    }
+    printf("\n");
+}
+
+// ---- Main ----
+
+int main() {
+
+    // Bağlı liste deneme
+    addEnd(10);
+    addEnd(20);
+    addEnd(40);
+    addMiddle(1, 30);
+    printf("Bagli Liste: ");
+    showList();
+
+    // Stack 15 işlem
+    push(10);
+    push(20);
+    push(30);
+    push(40);
+    push(50);
+    push(60);
+    push(70);
+    push(80);
+    push(90);
+    push(100);
+    pop();
+    pop();
+    push(110);
+    push(120);
+    push(130);
+
+    printf("Stack: ");
+    showStack();
+
+    return 0;
+}
